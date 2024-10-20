@@ -4,6 +4,8 @@ using OxyPlot;
 using System.Windows;
 using OxyPlot.Axes;
 using System.Printing;
+using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace AlgorithmLab2
 {
@@ -12,10 +14,14 @@ namespace AlgorithmLab2
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly HilbertCurve curve;
+
         public MainWindow()
         {
             InitializeComponent();
             InitializeTimeGraph();
+
+            curve = new HilbertCurve(HilbertCanvas, Brushes.Black, 2);
         }
 
         private void InitializeTimeGraph()
@@ -41,12 +47,18 @@ namespace AlgorithmLab2
 
         private void RunButton_Click(object sender, RoutedEventArgs e)
         {
-            if (RecursionSelector.SelectedItem != null)
+            if (RecursionSelector.SelectedItem is ComboBoxItem selectedItem)
             {
                 if (uint.TryParse(InputBox.Text, out uint n))
                 {
-                    // Заглушка
-                    MessageBox.Show("Всё окей дружище.", "Ура", MessageBoxButton.OK, MessageBoxImage.Information);
+                    if (selectedItem.Content.Equals("Кривая Гильберта"))
+                    {
+                        curve.DrawHilbertCurve(n, 500, 215, 50);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Жду башенки", "Где?", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
                 else
                 {
@@ -58,5 +70,6 @@ namespace AlgorithmLab2
                 MessageBox.Show("Перед началом необходимо выбрать тип рекурсии.", "ОШИБКА: НЕ ВЫБРАНА РЕКУРСИЯ", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
     }
 }

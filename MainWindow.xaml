@@ -25,7 +25,7 @@
         <GroupBox Header="Визуализация" Grid.RowSpan="4" Grid.ColumnSpan="4" BorderThickness="3" BorderBrush="Gray">
             <TabControl Margin="10" Padding="5">
                 <TabItem Header="Кривая Гильберта / Ханойские башни">
-                    Тут типо отрисовка нашего фрактала / башен. Для их отрисовки скорее всего будем использовать canvas.
+                    <Canvas Name="HilbertCanvas" Background="White"/>
                 </TabItem>
                 <TabItem Header="Временной график">
                     <oxy:PlotView x:Name="TimeGraph"/>
