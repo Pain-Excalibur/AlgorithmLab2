@@ -19,30 +19,10 @@ namespace AlgorithmLab2
         public MainWindow()
         {
             InitializeComponent();
-            InitializeTimeGraph();
 
             curve = new HilbertCurve(HilbertCanvas, Brushes.Black, 2);
-        }
 
-        private void InitializeTimeGraph()
-        {
-            PlotModel timeModel = new();
-
-            timeModel.Axes.Add(CreateAxis(AxisPosition.Bottom, "Размерность"));
-            timeModel.Axes.Add(CreateAxis(AxisPosition.Left, "Секунды"));
-
-            TimeGraph.Model = timeModel;
-        }
-
-
-        private static LinearAxis CreateAxis(AxisPosition position, string title)
-        {
-            return new LinearAxis
-            {
-                Position = position,
-                AbsoluteMinimum = 0,
-                Title = title
-            };
+            TimeGraph.Model = TimePlot.GetPlotModel("Ханойские башни");
         }
 
         private void RunButton_Click(object sender, RoutedEventArgs e)
