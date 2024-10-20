@@ -23,18 +23,21 @@
         </Grid.RowDefinitions>
 
         <GroupBox Header="Визуализация" Grid.RowSpan="4" Grid.ColumnSpan="4" BorderThickness="3" BorderBrush="Gray">
-            <TabControl Margin="10" Padding="5">
-                <TabItem Header="Кривая Гильберта / Ханойские башни">
+            <TabControl x:Name="Tabs" Margin="10" Padding="5">
+                <TabItem Header="Кривая Гильберта">
                     <Canvas Name="HilbertCanvas" Background="White"/>
                 </TabItem>
-                <TabItem Header="Временной график">
+                <TabItem Header="Ханойские башни">
+                    <Canvas Name="HanoiCanvas" Background="White"/>
+                </TabItem>
+                <TabItem Header="График">
                     <oxy:PlotView x:Name="TimeGraph"/>
                 </TabItem>
             </TabControl>
         </GroupBox>
 
         <GroupBox Header="Выбор рекурсии" Grid.Row="5" Padding="10" BorderThickness="3" BorderBrush="Gray">
-            <ComboBox x:Name="RecursionSelector" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+            <ComboBox x:Name="RecursionSelector" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="RecursionSelector_SelectionChanged">
                 <ComboBoxItem Content="Кривая Гильберта"/>
                 <ComboBoxItem Content="Ханойские башни"/>
             </ComboBox>

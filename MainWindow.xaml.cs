@@ -51,5 +51,19 @@ namespace AlgorithmLab2
             }
         }
 
+        private void RecursionSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem selectedItem = (ComboBoxItem) RecursionSelector.SelectedItem;
+            string? itemName = selectedItem.Content.ToString();
+
+            if (itemName.Equals("Кривая Гильберта"))
+            {
+                Tabs.SelectedIndex = 0;
+            }
+            else if (itemName.Equals("Ханойские башни"))
+            {
+                Tabs.SelectedIndex = 1;
+            }
+        }
     }
 }
