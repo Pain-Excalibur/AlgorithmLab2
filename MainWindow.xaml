@@ -6,7 +6,11 @@
         xmlns:local="clr-namespace:AlgorithmLab2"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+	<Grid>
+		<Label Content="Введите количество колец:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"/>
+		<TextBox Name="InputTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="10,30,0,0"/>
+		<Button Content="Решить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="150,30,0,0" Click="SolveButton_Click"/>
+		<Label Name="StepsCountLabel" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="240,30,0,0"/>
+		<TextBox Name="OutputTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="480" Height="240" Margin="10,70,0,0" AcceptsReturn="True" IsReadOnly="True"/>
+	</Grid>
 </Window>
