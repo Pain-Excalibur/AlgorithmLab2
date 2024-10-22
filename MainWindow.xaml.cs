@@ -15,12 +15,14 @@ namespace AlgorithmLab2
     public partial class MainWindow : Window
     {
         private readonly HilbertCurve curve;
+        private readonly TowerOfHanoi towers;
 
         public MainWindow()
         {
             InitializeComponent();
 
             curve = new HilbertCurve(HilbertCanvas, Brushes.Black, 2);
+            towers = new TowerOfHanoi(HanoiCanvas, StepsTextBox);
 
             TimeGraph.Model = TimePlot.GetPlotModel("Ханойские башни");
         }
@@ -35,9 +37,21 @@ namespace AlgorithmLab2
                     {
                         curve.DrawHilbertCurve(n, 500, 215, 50);
                     }
-                    else
+                    else if (selectedItem.Content.Equals("Ханойские башни"))
                     {
-                        MessageBox.Show("Жду башенки", "Где?", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBoxResult selection = MessageBox.Show(
+                            "Использовать итеративный метод, вместо рекурсивного?",
+                            "Выбор метода", MessageBoxButton.YesNo, MessageBoxImage.Question
+                        );
+
+                        if (selection == MessageBoxResult.Yes)
+                        {
+                            towers.SolveIteratively((int)n);
+                        }
+                        else
+                        {
+                            towers.SolveRecursively((int)n);
+                        }
                     }
                 }
                 else

@@ -28,7 +28,16 @@
                     <Canvas Name="HilbertCanvas" Background="White"/>
                 </TabItem>
                 <TabItem Header="Ханойские башни">
-                    <Canvas Name="HanoiCanvas" Background="White"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="0.25*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Canvas Name="HanoiCanvas" Grid.Column="0" Background="White" />
+
+                        <TextBox Name="StepsTextBox" Grid.Column="1" IsReadOnly="True" VerticalScrollBarVisibility="Visible"/>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="График">
                     <oxy:PlotView x:Name="TimeGraph"/>
