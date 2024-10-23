@@ -6,6 +6,7 @@ using OxyPlot.Axes;
 using System.Printing;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Reflection.Emit;
 
 namespace AlgorithmLab2
 {
@@ -22,47 +23,52 @@ namespace AlgorithmLab2
             InitializeComponent();
 
             curve = new HilbertCurve(HilbertCanvas, Brushes.Black, 2);
-            towers = new TowerOfHanoi(HanoiCanvas, StepsTextBox);
+            towers = new TowerOfHanoi(HanoiCanvas, StepsTextBox, Column1, Column2, Column3);
 
             TimeGraph.Model = TimePlot.GetPlotModel("Ханойские башни");
         }
 
-        private void RunButton_Click(object sender, RoutedEventArgs e)
+        public async void RunButton_Click(object sender, RoutedEventArgs e)
         {
-            if (RecursionSelector.SelectedItem is ComboBoxItem selectedItem)
-            {
-                if (uint.TryParse(InputBox.Text, out uint n))
+            await Task.Run(() => {
+                Dispatcher.BeginInvoke((Action)(() =>
                 {
-                    if (selectedItem.Content.Equals("Кривая Гильберта"))
+                    if (RecursionSelector.SelectedItem is ComboBoxItem selectedItem)
                     {
-                        curve.DrawHilbertCurve(n, 500, 215, 50);
-                    }
-                    else if (selectedItem.Content.Equals("Ханойские башни"))
-                    {
-                        MessageBoxResult selection = MessageBox.Show(
-                            "Использовать итеративный метод, вместо рекурсивного?",
-                            "Выбор метода", MessageBoxButton.YesNo, MessageBoxImage.Question
-                        );
-
-                        if (selection == MessageBoxResult.Yes)
+                        if (uint.TryParse(InputBox.Text, out uint n))
                         {
-                            towers.SolveIteratively((int)n);
+                            if (selectedItem.Content.Equals("Кривая Гильберта"))
+                            {
+                                curve.DrawHilbertCurve(n, 500, 215, 50);
+                            }
+                            else if (selectedItem.Content.Equals("Ханойские башни"))
+                            {
+                                MessageBoxResult selection = MessageBox.Show(
+                                    "Использовать итеративный метод, вместо рекурсивного?",
+                                    "Выбор метода", MessageBoxButton.YesNo, MessageBoxImage.Question
+                                );
+
+                                if (selection == MessageBoxResult.Yes)
+                                {
+                                    towers.SolveIteratively((int)n);
+                                }
+                                else
+                                {
+                                    towers.SolveRecursively((int)n);
+                                }
+                            }
                         }
                         else
                         {
-                            towers.SolveRecursively((int)n);
+                            MessageBox.Show("Введены некорректные параметры, повторите ввод.", "ОШИБКА: НЕКОРРЕКТНЫЕ ПАРАМЕТРЫ", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
-                }
-                else
-                {
-                    MessageBox.Show("Введены некорректные параметры, повторите ввод.", "ОШИБКА: НЕКОРРЕКТНЫЕ ПАРАМЕТРЫ", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Перед началом необходимо выбрать тип рекурсии.", "ОШИБКА: НЕ ВЫБРАНА РЕКУРСИЯ", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                    else
+                    {
+                        MessageBox.Show("Перед началом необходимо выбрать тип рекурсии.", "ОШИБКА: НЕ ВЫБРАНА РЕКУРСИЯ", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }));
+            });
         }
 
         private void RecursionSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -78,6 +84,11 @@ namespace AlgorithmLab2
             {
                 Tabs.SelectedIndex = 1;
             }
+        }
+
+        private void InputBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

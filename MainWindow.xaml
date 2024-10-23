@@ -27,14 +27,22 @@
                 <TabItem Header="Кривая Гильберта">
                     <Canvas Name="HilbertCanvas" Background="White"/>
                 </TabItem>
-                <TabItem Header="Ханойские башни">
+                <TabItem Header="Ханойские башни" Height="28" VerticalAlignment="Top">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="0.25*" />
                         </Grid.ColumnDefinitions>
 
-                        <Canvas Name="HanoiCanvas" Grid.Column="0" Background="White" />
+                        <Canvas Name="HanoiCanvas" Grid.Column="0" Background="White">
+                            <Canvas Panel.ZIndex="1" Name="Column1" Height="450" Width="284" Canvas.Left="0" Canvas.Bottom="40"/>
+                            <Canvas Panel.ZIndex="1" Name="Column2" Height="450" Width="284" Canvas.Left="285" Canvas.Bottom="40"/>
+                            <Canvas Panel.ZIndex="1" Name="Column3" Height="450" Width="284" Canvas.Left="570" Canvas.Bottom="40"/>
+                            <Rectangle Fill="BurlyWood" Height="20"  Width="854" Canvas.Top="599" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <Rectangle Fill="#3d3d3d" Height="450"  Width="20" Canvas.Left="132" Canvas.Top="149"/>
+                            <Rectangle Fill="#3d3d3d" Height="450"  Width="20" Canvas.Left="417" Canvas.Top="149"/>
+                            <Rectangle Fill="#3d3d3d" Height="450"  Width="20" Canvas.Left="702" Canvas.Top="149"/>
+                        </Canvas>
 
                         <TextBox Name="StepsTextBox" Grid.Column="1" IsReadOnly="True" VerticalScrollBarVisibility="Visible"/>
                     </Grid>
@@ -51,7 +59,7 @@
                 <ComboBoxItem Content="Ханойские башни"/>
             </ComboBox>
         </GroupBox>
-        
+
         <GroupBox Header="Параметры" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" Padding="10" BorderThickness="3" BorderBrush="Gray">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -59,7 +67,7 @@
                     <ColumnDefinition Width="0.2*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="InputBox" Grid.Column="1" Margin="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <TextBox x:Name="InputBox" Grid.Column="1" Margin="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="InputBox_TextChanged"/>
 
                 <TextBlock TextWrapping="Wrap" Margin="5,2,7,5">
                     Укажите размерность рекурсии. Для ханойских башен - это количество колец. Для нашего фрактала - его глубина.
