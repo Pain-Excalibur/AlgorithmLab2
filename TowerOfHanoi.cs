@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace AlgorithmLab2
 {
-    public class TowerOfHanoi
+    public class TowerOfHanoi : IStepable
     {
         private readonly Canvas canvas; // Для будущей визуализации
         private readonly TextBox textBox;
@@ -20,11 +20,44 @@ namespace AlgorithmLab2
             this.textBox = textBox;
             steps = [];
         }
+        /// <summary>
+        /// Внимание! Может вернуть 0 если не было запущено вычисление.
+        /// </summary>
+        /// <returns>
+        /// Количество совершённых шагов
+        /// </returns>
+        public double GetStepsCount()
+        {
+            return steps.Count;
+        }
+
+        private void Clear()
+        {
+            steps.Clear();
+            canvas.Children.Clear();
+        }
+
+        private void PrintSteps()
+        {
+            textBox.Text = string.Join(Environment.NewLine, steps);
+        }
+
+        public void Solve(int n, bool solveByIteration)
+        {
+            Clear();
+            if (solveByIteration)
+            {
+                SolveIteratively(n);
+            }
+            else
+            {
+                SolveRecursively(n);
+            }
+            PrintSteps();
+        }
 
         public void SolveIteratively(int n)
         {
-            canvas.Children.Clear();
-            steps.Clear();
 
             char source = 'A';
             char target = 'C';
@@ -47,17 +80,11 @@ namespace AlgorithmLab2
                 steps.Add($"{GetRodName(from)} --> {GetRodName(to)}");
             }
 
-            textBox.Text = string.Join(Environment.NewLine, steps);
         }
 
         public void SolveRecursively(int n)
         {
-            canvas.Children.Clear();
-            steps.Clear();
-
             MoveDisks(n, 1, 3, 2);
-
-            textBox.Text = string.Join(Environment.NewLine, steps);
         }
 
         private void MoveDisks(int n, int from, int to, int temp)
@@ -69,7 +96,7 @@ namespace AlgorithmLab2
             }
 
             MoveDisks(n - 1, from, temp, to);
-            steps.Add($"{from} --> {to}");
+            steps.Add($"{from} --> {to}"); //мб тут тоже GetRodName нужно использовать?
             MoveDisks(n - 1, temp, to, from);
         }
 
