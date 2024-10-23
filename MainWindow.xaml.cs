@@ -16,6 +16,7 @@ namespace AlgorithmLab2
     {
         private readonly HilbertCurve curve;
         private readonly TowerOfHanoi towers;
+        private readonly PlotModel plotModel;
 
         public MainWindow()
         {
@@ -24,11 +25,12 @@ namespace AlgorithmLab2
             curve = new HilbertCurve(HilbertCanvas, Brushes.Black, 2);
             towers = new TowerOfHanoi(HanoiCanvas, StepsTextBox);
 
-            TimeGraph.Model = TimePlot.GetPlotModel("Ханойские башни", towers);
+            plotModel = TimePlot.GetPlotModel("Ханойские башни");
         }
 
         private void RunButton_Click(object sender, RoutedEventArgs e)
         {
+           
             if (RecursionSelector.SelectedItem is ComboBoxItem selectedItem)
             {
                 if (uint.TryParse(InputBox.Text, out uint n))
@@ -45,6 +47,38 @@ namespace AlgorithmLab2
                         );
 
                         towers.Solve((int)n, selection == MessageBoxResult.Yes); //второй аргумент отвечает за способ решения true - итеративный, false - рекурсивный
+                        
+                        
+                        FunctionSeries series = TimePlot.GetTimeGraph((int)n);
+                        plotModel.Series.Add(series);
+                        TimeGraph.Model = plotModel;
+                        TimeGraph.Model.InvalidatePlot(true);
+                        
+                        int m = 8;
+                        double[] data = new double[n];
+                        
+                        for (int i = 0; i < m; i++)
+                        {
+                            FunctionSeries serie = TimePlot.GetTimeGraph((int)n);
+                            int j = 0;
+                            foreach (DataPoint dataPoint in serie.Points)
+                            {
+                                data[j] += dataPoint.Y;
+                                j++;
+                            }
+                        }
+
+                        for (int i = 0; i < n; i++)
+                        {
+                            data[i] = data[i] / n;
+                        }
+
+
+
+                        plotModel.Series.Add(TimePlot.GetApproximationGraph(data));
+                        TimeGraph.Model = plotModel;
+                        TimeGraph.Model.InvalidatePlot(true);
+                        
                     }
                 }
                 else

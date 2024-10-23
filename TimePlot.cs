@@ -2,6 +2,7 @@
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using System.Diagnostics;
+using MathNet.Numerics;
 
 namespace AlgorithmLab2
 {
@@ -10,38 +11,63 @@ namespace AlgorithmLab2
     /// </summary>
     public class TimePlot
     {
-        //your function based on x,y
-        public static double getValue(int x, int y)
+        private static double GetTime(int x)
         {
-            //TowerOfHanoi tower = new TowerOfHanoi();
+            
             Stopwatch stopwatch = new Stopwatch();
-
-            for (int i = 0; i < 5; i++)
-            {
-
-            }
-
-            return 1;
+            TowerOfHanoi towerOfHanoi = new TowerOfHanoi();
+            towerOfHanoi.SolveRecursively(5);
+            stopwatch.Restart();
+            towerOfHanoi.SolveRecursively(x);
+            stopwatch.Stop();
+            return stopwatch.Elapsed.TotalMilliseconds;
         }
 
-        //setting the values to the function
-        public static FunctionSeries GetFunction(TowerOfHanoi tower)
+        public static FunctionSeries GetTimeGraph(int n)
         {
-            int n = 5;
             FunctionSeries serie = new FunctionSeries();
-            for (int x = 0; x < n; x++)
+            for (int x = 1; x < n; x++)
             {
-                for (int y = 0; y < n; y++)
-                {
+              
                     //adding the points based x,y
-                    DataPoint data = new DataPoint(x, getValue(x, y));
+                 DataPoint data = new DataPoint(x, GetTime(x));
 
                     //adding the point to the serie
-                    serie.Points.Add(data);
-                }
+                serie.Points.Add(data);
+                
             }
-            //returning the serie
+            
+
             return serie;
+        }
+
+        public static LineSeries GetApproximationGraph(double[] data)
+        {
+            int length = data.Length;
+            double[] elements = new double[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                elements[i] = i+1;
+            }
+
+            // TODO: наверное нужна более подробная аппроксимация, потому не везде подходит вторая степень.
+            var coefficients = Fit.Polynomial(elements, data, 2);
+            var f = Fit.PolynomialFunc(elements, data, 5);
+
+            LineSeries lineSeries = new()
+            {
+                Title = "Аппроксимация",
+                Color = OxyColors.Red
+            };
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                double value = coefficients[0] + coefficients[1] * (i+1) + coefficients[2] * Math.Pow(i + 1, 2);
+                lineSeries.Points.Add(new DataPoint(i, f(i)));
+            }
+
+            return lineSeries;
         }
 
         /// <summary>
@@ -49,7 +75,7 @@ namespace AlgorithmLab2
         /// </summary>
         /// <param name="title">Заголовок графика. Если значение null, будет присвоена пустая строка.</param>
         /// <returns>Модель графика с осью X и осью Y.</returns>
-        public static PlotModel GetPlotModel(string title, TowerOfHanoi tower)
+        public static PlotModel GetPlotModel(string title)
         {
             PlotModel model = new()
             {
@@ -59,8 +85,7 @@ namespace AlgorithmLab2
             model.Axes.Add(CreateAxis(AxisPosition.Bottom, "Размерность"));
             model.Axes.Add(CreateAxis(AxisPosition.Left, "Секунды"));
 
-            model.Series.Add(GetFunction(tower));
-
+            
             return model;
         }
 

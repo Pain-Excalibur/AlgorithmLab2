@@ -20,6 +20,11 @@ namespace AlgorithmLab2
             this.textBox = textBox;
             steps = [];
         }
+
+        public TowerOfHanoi()
+        {
+            steps = [];
+        }
         /// <summary>
         /// Внимание! Может вернуть 0 если не было запущено вычисление.
         /// </summary>
