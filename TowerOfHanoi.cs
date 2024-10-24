@@ -127,18 +127,22 @@ namespace AlgorithmLab2
             }
         }
 
-        private void CreateArea(int n) // нарисовать поле
+        private void CreateArea(int n)//нарисовать поле
         {
             column1.Children.Clear();
             column2.Children.Clear();
             column3.Children.Clear();
-            int difference = n > 1 ? (MaxWidth - MinWidth) / (n - 1) : 0;
+            int difference;
+            if (n > 1)
+                difference = (MaxWidth - MinWidth) / (n - 1);
+            else
+                difference = 0;
 
             for (int ringNumber = 0; ringNumber < n; ringNumber++)
             {
                 Rectangle ring = new Rectangle
                 {
-                    Width = MaxWidth - ringNumber * difference,
+                    Width = MaxWidth - ringNumber * (difference),
                     Height = MaxHeight,
                     Fill = Brusher.RingsBrusher(ringNumber, n)
                 };
@@ -150,48 +154,59 @@ namespace AlgorithmLab2
 
         private async Task MoveRings(int fromNumber, int toNumber)
         {
-            double animtimeS = 0.2;
+            double animtimeS = 0.15;
             Canvas fromColumn = GetColumn(fromNumber);
             Canvas toColumn = GetColumn(toNumber);
             if (fromColumn.Children.Count == 0) return;
 
-            // Извлекаем верхнее кольцо с исходной колонны
             Rectangle ring = (Rectangle)fromColumn.Children[fromColumn.Children.Count - 1];
 
-            // анимация
-            ring.BeginAnimation(Canvas.TopProperty, new DoubleAnimation()
+            ring.BeginAnimation(Canvas.BottomProperty, new DoubleAnimation()
             {
-                From = (int)(fromColumn.Height - (fromColumn.Children.Count * MaxHeight)),
-                To = -100,
+                To = fromColumn.Height + 100,
                 Duration = TimeSpan.FromSeconds(animtimeS)
             });
-            await Task.Delay((int)(animtimeS * 1000));
+            await Task.Delay((int)(animtimeS * 1000 + 100));
 
-            ring.BeginAnimation(Canvas.LeftProperty, new DoubleAnimation()
-            {
-                From = (int)(Canvas.GetLeft(fromColumn) + (284 - ring.Width) / 2),
-                To = (int)(Canvas.GetLeft(toColumn)) + (284 - ring.Width) / 2,
-                Duration = TimeSpan.FromSeconds(animtimeS)
-            });
-            await Task.Delay((int)(animtimeS * 1000));
+            if (fromNumber < toNumber)
+                ring.BeginAnimation(Canvas.LeftProperty, new DoubleAnimation()
+                {
+                    To = (int)(Canvas.GetLeft(toColumn) - Canvas.GetLeft(fromColumn) + (284 - ring.Width) / 2),
+                    Duration = TimeSpan.FromSeconds(animtimeS)
+                });
+            else
+                ring.BeginAnimation(Canvas.LeftProperty, new DoubleAnimation()
+                {
+                    To = (int)((Canvas.GetLeft(toColumn) - Canvas.GetLeft(fromColumn)) + ((284 - ring.Width) / 2)),
+                    Duration = TimeSpan.FromSeconds(animtimeS)
+                });
+            await Task.Delay((int)(animtimeS * 1000 + 100));
 
-            ring.BeginAnimation(Canvas.TopProperty, new DoubleAnimation()
+            ring.BeginAnimation(Canvas.BottomProperty, new DoubleAnimation()
             {
-                From = -100,
-                To = (int)(toColumn.Height - (toColumn.Children.Count * MaxHeight)),
+                To = toColumn.Children.Count * MaxHeight - 20,
                 Duration = TimeSpan.FromSeconds(animtimeS)
             });
+            await Task.Delay((int)(animtimeS * 1000 + 100));
+
             await ChangeColumn(ring, fromColumn, toColumn);
         }
 
         private async Task ChangeColumn(Rectangle ring, Canvas fromColumn, Canvas toColumn)
         {
             fromColumn.Children.Remove(ring);
-            await Task.Delay(10);
-            toColumn.Children.Add(ring);
-            await Task.Delay(10);
-            // Обновляем позицию кольца в целевой колонне
-            Canvas.SetTop(ring, toColumn.Height - (toColumn.Children.Count * MaxHeight) + 20);
+
+            Rectangle ring2 = new Rectangle
+            {
+                Width = ring.Width,
+                Height = ring.Height,
+                Fill = ring.Fill
+            };
+
+            Canvas.SetBottom(ring2, (toColumn.Children.Count * MaxHeight) - 20);
+            Canvas.SetLeft(ring2, (284 - ring.Width) / 2);
+            toColumn.Children.Add(ring2);
+            await Task.Delay(200);
         }
 
         private Canvas GetColumn(int index)

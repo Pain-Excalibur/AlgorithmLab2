@@ -35,7 +35,7 @@ namespace AlgorithmLab2
                 {
                     if (selectedItem.Content.Equals("Кривая Гильберта"))
                     {
-                        curve.DrawHilbertCurve(n, 500, 215, 50);
+                        curve.DrawHilbertCurve(n, 500, 240, 50);
                     }
                     else if (selectedItem.Content.Equals("Ханойские башни"))
                     {
@@ -98,6 +98,22 @@ namespace AlgorithmLab2
             else if (itemName.Equals("Ханойские башни"))
             {
                 Tabs.SelectedIndex = 1;
+            }
+        }
+
+        private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Tabs.SelectedItem is TabItem selectedTab)
+            {
+                switch (selectedTab.Header.ToString())
+                {
+                    case "Кривая Гильберта":
+                        RecursionSelector.SelectedIndex = 0;
+                        break;
+                    case "Ханойские башни":
+                        RecursionSelector.SelectedIndex = 1;
+                        break;
+                }
             }
         }
     }
