@@ -98,6 +98,7 @@ namespace AlgorithmLab2
             if (n == 1)
             {
                 steps.Add($"{from} --> {to}");
+                solution.Add(new Tuple<int, int>(from - 1, to - 1));
                 return;
             }
 
