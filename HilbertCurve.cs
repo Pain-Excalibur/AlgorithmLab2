@@ -7,12 +7,13 @@ namespace AlgorithmLab2
     /// <summary>
     /// Класс для построения и отрисовки кривой Гильберта на холсте.
     /// </summary>
-    public class HilbertCurve
+    public class HilbertCurve : IStepable
     {
         private double x, y; // Координаты отрисовки линии.
         private readonly Canvas canvas; // Холст для отрисовки.
         private readonly Brush strokeColor; // Цвет линии.
         private readonly double strokeThickness; // Толщина линии.
+        private int steps; // Количество отдельных шагов для отрисовки фрактала
 
         /// <summary>
         /// Конструктор класса HilbertCurve.
@@ -23,6 +24,17 @@ namespace AlgorithmLab2
             this.canvas = canvas;
             this.strokeColor = strokeColor;
             this.strokeThickness = strokeThickness;
+        }
+
+        /// <summary>
+        /// Внимание! Может вернуть 0 если не было запущено вычисление.
+        /// </summary>
+        /// <returns>
+        /// Количество совершённых шагов
+        /// </returns>
+        public double GetStepsCount()
+        {
+            return steps;
         }
 
         /// <summary>
@@ -54,6 +66,8 @@ namespace AlgorithmLab2
         private void Hilbert(uint level, double dx, double dy, double nextDx, double nextDy)
         {
             if (level == 0) return; // Выход из рекурсии.
+
+            this.steps++;
 
             Hilbert(level - 1, dy, dx, nextDy, nextDx);
             DrawLine(x, y, x + dx, y + dy);

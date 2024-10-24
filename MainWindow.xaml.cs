@@ -44,14 +44,23 @@ namespace AlgorithmLab2
                             "Выбор метода", MessageBoxButton.YesNo, MessageBoxImage.Question
                         );
 
-                        if (selection == MessageBoxResult.Yes)
+                        var points = new List<DataPoint>();
+                        for (int i = 1; i <= n; i++)
                         {
-                            towers.SolveIteratively((int)n);
+                            double time;
+                            if (selection == MessageBoxResult.Yes)
+                            {
+                                time = towers.SolveIterativelyWithTime(i);
+                            }
+                            else
+                            {
+                                time = towers.SolveRecursivelyWithTime(i);
+                            }
+                            points.Add(new DataPoint(i, time));
                         }
-                        else
-                        {
-                            towers.SolveRecursively((int)n);
-                        }
+
+                        string methodTitle = selection == MessageBoxResult.Yes ? "Итеративный метод" : "Рекурсивный метод";
+                        TimePlot.AddSeries(TimeGraph.Model, points, methodTitle);
                     }
                 }
                 else
@@ -64,6 +73,7 @@ namespace AlgorithmLab2
                 MessageBox.Show("Перед началом необходимо выбрать тип рекурсии.", "ОШИБКА: НЕ ВЫБРАНА РЕКУРСИЯ", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void RecursionSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

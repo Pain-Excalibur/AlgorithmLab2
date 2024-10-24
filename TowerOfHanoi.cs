@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Diagnostics;
 using System.Windows.Controls;
 
 namespace AlgorithmLab2
@@ -18,7 +13,23 @@ namespace AlgorithmLab2
         {
             this.canvas = canvas;
             this.textBox = textBox;
-            steps = [];
+            steps = new List<string>();
+        }
+
+        public double SolveIterativelyWithTime(int n)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            SolveIteratively(n);
+            stopwatch.Stop();
+            return stopwatch.Elapsed.TotalSeconds;
+        }
+
+        public double SolveRecursivelyWithTime(int n)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            SolveRecursively(n);
+            stopwatch.Stop();
+            return stopwatch.Elapsed.TotalSeconds;
         }
 
         public void SolveIteratively(int n)

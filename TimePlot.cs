@@ -1,5 +1,7 @@
 ﻿using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Series;
+using System.Collections.Generic;
 
 namespace AlgorithmLab2
 {
@@ -24,6 +26,28 @@ namespace AlgorithmLab2
             model.Axes.Add(CreateAxis(AxisPosition.Left, "Секунды"));
 
             return model;
+        }
+
+        /// <summary>
+        /// Добавляет серию данных на график.
+        /// </summary>
+        /// <param name="model">Модель графика.</param>
+        /// <param name="points">Точки данных.</param>
+        /// <param name="title">Заголовок серии данных.</param>
+        public static void AddSeries(PlotModel model, List<DataPoint> points, string title)
+        {
+            LineSeries series = new LineSeries
+            {
+                Title = title,
+                ItemsSource = points,
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 4,
+                MarkerStroke = OxyColors.Black
+            };
+
+            model.Series.Clear();
+            model.Series.Add(series);
+            model.InvalidatePlot(true);
         }
 
         /// <summary>
