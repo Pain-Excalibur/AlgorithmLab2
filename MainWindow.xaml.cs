@@ -6,12 +6,10 @@ using OxyPlot.Axes;
 using System.Printing;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace AlgorithmLab2
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private readonly HilbertCurve curve;
@@ -22,12 +20,14 @@ namespace AlgorithmLab2
             InitializeComponent();
 
             curve = new HilbertCurve(HilbertCanvas, Brushes.Black, 2);
-            towers = new TowerOfHanoi(HanoiCanvas, StepsTextBox);
+
+            // Передаем три колонки для башен
+            towers = new TowerOfHanoi(HanoiCanvas, StepsTextBox, Column1, Column2, Column3);
 
             TimeGraph.Model = TimePlot.GetPlotModel("Ханойские башни");
         }
 
-        private void RunButton_Click(object sender, RoutedEventArgs e)
+        private async void RunButton_Click(object sender, RoutedEventArgs e)
         {
             if (RecursionSelector.SelectedItem is ComboBoxItem selectedItem)
             {
@@ -61,6 +61,18 @@ namespace AlgorithmLab2
 
                         string methodTitle = selection == MessageBoxResult.Yes ? "Итеративный метод" : "Рекурсивный метод";
                         TimePlot.AddSeries(TimeGraph.Model, points, methodTitle);
+
+                        List<Tuple<int, int>> solution;
+                        if (selection == MessageBoxResult.Yes)
+                        {
+                            solution = towers.SolveIteratively((int)n);
+                        }
+                        else
+                        {
+                            solution = towers.SolveRecursively((int)n);
+                        }
+
+                        await towers.DrawRings((int)n, solution);
                     }
                 }
                 else
@@ -74,10 +86,9 @@ namespace AlgorithmLab2
             }
         }
 
-
         private void RecursionSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItem selectedItem = (ComboBoxItem) RecursionSelector.SelectedItem;
+            ComboBoxItem selectedItem = (ComboBoxItem)RecursionSelector.SelectedItem;
             string? itemName = selectedItem.Content.ToString();
 
             if (itemName.Equals("Кривая Гильберта"))
